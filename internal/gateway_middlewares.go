@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -32,12 +33,12 @@ func (dm *DurationMeter) Middleware() gin.HandlerFunc {
 		t1 := time.Now()
 		g.Next()
 		duration := time.Since(t1)
-		path := g.Request.URL.Path
-		val, ok := dm.AvgServiceResponseDuration[path]
+		methodPath := fmt.Sprintf("[%s]=%s",g.Request.Method,g.Request.URL.Path)
+		val, ok := dm.AvgServiceResponseDuration[methodPath]
 		if ok {
-			dm.AvgServiceResponseDuration[path] = (val + duration) / 2
+			dm.AvgServiceResponseDuration[methodPath] = (val + duration) / 2
 		} else {
-			dm.AvgServiceResponseDuration[path] = duration
+			dm.AvgServiceResponseDuration[methodPath] = duration
 		}
 	}
 }
