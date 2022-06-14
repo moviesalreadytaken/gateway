@@ -34,9 +34,9 @@ func (dm *DurationMeter) Middleware() gin.HandlerFunc {
 		g.Next()
 		duration := time.Since(t1)
 		methodPath := fmt.Sprintf("[%s]=%s",g.Request.Method,g.Request.URL.Path)
-		val, ok := dm.AvgServiceResponseDuration[methodPath]
+		oldDuration, ok := dm.AvgServiceResponseDuration[methodPath]
 		if ok {
-			dm.AvgServiceResponseDuration[methodPath] = (val + duration) / 2
+			dm.AvgServiceResponseDuration[methodPath] = (oldDuration + duration) / 2
 		} else {
 			dm.AvgServiceResponseDuration[methodPath] = duration
 		}
